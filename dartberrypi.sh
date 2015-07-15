@@ -58,30 +58,23 @@ function GettingTheSource {
 	gclient config https://github.com/dart-lang/sdk.git
 	gclient sync
 }
-function DebianPackage {
+function Build {
 	# Change to the dart directory, make an output directory, and build the
 	# package
 	(cd sdk; \
 	mkdir out; \
-	./tools/create_tarball.py; \
-	./tools/create_debian_packages.py -a armhf -t `pwd`/../rpi-tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/arm-linux-gnueabihf)
+        ./tools/build.py -m release -a arm --toolchain=`pwd`/../rpi-tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/arm-linux-gnueabihf runtime; \
+	./tools/build.py -m release -a arm --toolchain=`pwd`/../rpi-tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/arm-linux-gnueabihf create_sdk; \
+	tar -zcvf dart-sdk.tar.gz out/ReleaseXARM/dart-sdk)
 }
 
-function RaspbianDepsFix {
-	# Fix dependencies in the generated package for Raspbian to prevent
-	# warnings about requiring a newer version of libc6
-	dpkg-deb -x dart/out/dart_*_armhf.deb dart/out/dartsdk
-	dpkg-deb --control dart/out/dart_*_armhf.deb dart/out/dartsdk/DEBIAN
-	sed -i 's/ (>= *.*)//' dart/out/dartsdk/DEBIAN/control
-	dpkg -b dart/out/dartsdk dart/out/dart_*_armhf.deb
-}
 function CheckSuccess {
 	# Lets make sure that a Debian package was created before we say 
 	# "Success!!!"
-	if [ -e dart/out/dart_*_armhf.deb ]
+	if [ -e sdk/dart-sdk.tar.gz ]
 	then
 		echo -e "\033[32m[Success!!!]\033[0m"
-		cp dart/out/dart_*_armhf.deb .
+		cp sdk/dart-sdk.tar.gz .
 	else
 		echo -e "\033[31m[Fail]\033[0m"
 		echo "Sorry, something went wrong"
@@ -111,9 +104,7 @@ echo -e "\033[32m[Preparing your machine...]\033[0m"
 PreparingYourMachine 
 echo -e "\033[32m[Getting Dart SDK source code...]\033[0m"
 GettingTheSource
-echo -e "\033[32m[Building Debian package...]\033[0m"
-DebianPackage
-echo -e "\033[32m[Fixing dependencies for Raspbian...]\033[0m"
-RaspbianDepsFix
+echo -e "\033[32m[Building sdk...]\033[0m"
+Build
 CheckSuccess
 
