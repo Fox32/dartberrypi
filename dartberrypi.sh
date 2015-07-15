@@ -24,8 +24,6 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 # 
 
-DART_SVN_BRANCH="1.8"
-
 # Display a terse help message
 function DisplayHelp {
 	echo
@@ -33,7 +31,6 @@ function DisplayHelp {
 	echo -e "\t./dartberrypi.sh [OPTIONS]"
 	echo
 	echo "Options:"
-	echo -e "\t-b BRANCH\tBuild the specified subversion BRANCH"
 	echo -e "\t-h\t\tDisplay this help message"
 	echo
 	exit 1
@@ -51,14 +48,14 @@ function PreparingYourMachine {
 	export PATH=$PATH:`pwd`/depot_tools
 
 	# Install the default JDK
-	sudo apt-get -y install default-jdk
+	#sudo apt-get -y install default-jdk # we expect this for now...
 
 	# Get Raspberry Pi cross compile build tools
 	git clone https://github.com/raspberrypi/tools rpi-tools
 }
 function GettingTheSource {
 	# Get the source code using depot tools
-	gclient config http://dart.googlecode.com/svn/branches/$DART_SVN_BRANCH/deps/all.deps
+	gclient config https://github.com/dart-lang/sdk.git
 	gclient sync
 }
 function DebianPackage {
@@ -108,7 +105,7 @@ while getopts :b:h FLAG; do
 done
 
 
-echo -e "\033[1m[Building Dart SDK Raspbian package from the $DART_SVN_BRANCH subversion branch...]\033[0m"
+echo -e "\033[1m[Building Dart SDK Raspbian package from github...]\033[0m"
 echo -e "\033[32m[Preparing your machine...]\033[0m"
 PreparingYourMachine 
 echo -e "\033[32m[Getting Dart SDK source code...]\033[0m"
