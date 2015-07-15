@@ -61,7 +61,7 @@ function GettingTheSource {
 function DebianPackage {
 	# Change to the dart directory, make an output directory, and build the
 	# package
-	(cd dart; \
+	(cd sdk; \
 	mkdir out; \
 	./tools/create_tarball.py; \
 	./tools/create_debian_packages.py -a armhf -t `pwd`/../rpi-tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/arm-linux-gnueabihf)
