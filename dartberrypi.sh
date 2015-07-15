@@ -40,7 +40,7 @@ function DisplayHelp {
 # found at https://code.google.com/p/dart/wiki/RaspberryPi
 function PreparingYourMachine {
 	# This script installs the dependencies required to build the Dart SDK
-	wget http://src.chromium.org/svn/trunk/src/build/install-build-deps.sh
+	wget -q http://src.chromium.org/svn/trunk/src/build/install-build-deps.sh -O install-build-deps.sh
         chmod u+x install-build-deps.sh
 	./install-build-deps.sh --no-chromeos-fonts --no-nacl --arm --no-prompt
 	# Install depot tools
