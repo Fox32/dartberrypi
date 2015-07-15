@@ -85,6 +85,7 @@ function CheckSuccess {
 	else
 		echo -e "\033[31m[Fail]\033[0m"
 		echo "Sorry, something went wrong"
+		exit 1
 	fi
 }
 
