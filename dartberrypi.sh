@@ -65,7 +65,8 @@ function Build {
 	mkdir out; \
         ./tools/build.py -m release -a arm --toolchain=`pwd`/../rpi-tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/arm-linux-gnueabihf runtime; \
 	./tools/build.py -m release -a arm --toolchain=`pwd`/../rpi-tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/arm-linux-gnueabihf create_sdk; \
-	tar -zcvf dart-sdk.tar.gz out/ReleaseXARM/dart-sdk)
+	cd out/ReleaseXARM; \
+	tar -zcvf dart-sdk.tar.gz dart-sdk)
 }
 
 function CheckSuccess {
@@ -74,7 +75,7 @@ function CheckSuccess {
 	if [ -e sdk/dart-sdk.tar.gz ]
 	then
 		echo -e "\033[32m[Success!!!]\033[0m"
-		cp sdk/dart-sdk.tar.gz .
+		cp sdk/out/ReleaseXARM/dart-sdk.tar.gz .
 	else
 		echo -e "\033[31m[Fail]\033[0m"
 		echo "Sorry, something went wrong"
